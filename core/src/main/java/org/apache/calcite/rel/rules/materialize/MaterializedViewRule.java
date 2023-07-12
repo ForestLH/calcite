@@ -89,6 +89,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <C> Configuration type
  */
+// 基于结构信息改写
 public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config>
     extends RelRule<C> {
 
@@ -156,12 +157,14 @@ public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config
         planner.getMaterializations();
 
     if (!materializations.isEmpty()) {
+      // 1. 探索查询计划，以识别是否要尝试生成重写的先决条件
       // 1. Explore query plan to recognize whether preconditions to
       // try to generate a rewriting are met
       if (!isValidPlan(topProject, node, mq)) {
         return;
       }
 
+      // 2. 初始化所有与查询相关的辅助数据结构，这些数据结构将在整个查询重写过程中生成查询表参考
       // 2. Initialize all query related auxiliary data structures
       // that will be used throughout query rewriting process
       // Generate query table references

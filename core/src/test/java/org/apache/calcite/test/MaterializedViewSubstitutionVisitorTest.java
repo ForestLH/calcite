@@ -829,10 +829,11 @@ public class MaterializedViewSubstitutionVisitorTest {
   }
 
   @Test void testJoinMaterialization() {
-    String q = "select *\n"
-        + "from (select * from \"emps\" where \"empid\" < 300)\n"
-        + "join \"depts\" using (\"deptno\")";
-    sql("select * from \"emps\" where \"empid\" < 500", q).ok();
+    String q = "select \"empid\" \"deptno\" from \"depts\"\n"
+        + "join \"emps\" using (\"deptno\") where \"empid\" > 10";
+    String m = "select \"empid\" \"deptno\" from \"depts\"\n"
+        + "join \"emps\" using (\"deptno\") where \"empid\" > 1";
+    sql(m, q).ok();
   }
 
   /** Test case for
@@ -840,19 +841,18 @@ public class MaterializedViewSubstitutionVisitorTest {
    * TableScan without Project cannot be substituted by any projected
    * materialization</a>. */
   @Test void testJoinMaterialization2() {
-    String q = "select *\n"
-        + "from \"emps\"\n"
-        + "join \"depts\" using (\"deptno\")";
-    String m = "select \"deptno\", \"empid\", \"name\",\n"
-        + "\"salary\", \"commission\" from \"emps\"";
+    String q = "select \"empid\" \"deptno\" from \"depts\"\n"
+        + "join \"emps\" using (\"deptno\") where \"empid\" = 1";
+    String m = "select \"empid\" \"deptno\" from \"depts\"\n"
+        + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();
   }
 
   @Test void testJoinMaterialization3() {
     String q = "select \"empid\" \"deptno\" from \"emps\"\n"
         + "join \"depts\" using (\"deptno\") where \"empid\" = 1";
-    String m = "select \"empid\" \"deptno\" from \"emps\"\n"
-        + "join \"depts\" using (\"deptno\")";
+    String m = "select \"empid\" \"deptno\" from \"depts\"\n"
+        + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();
   }
 

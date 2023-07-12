@@ -45,6 +45,7 @@ class IterativeRuleDriver implements RuleDriver {
   }
 
   @Override public void drive() {
+    // 这里是一个死循环
     while (true) {
       assert planner.root != null : "RelSubset must not be null at this point";
       LOGGER.debug("Best cost before rule match: {}", planner.root.bestCost);

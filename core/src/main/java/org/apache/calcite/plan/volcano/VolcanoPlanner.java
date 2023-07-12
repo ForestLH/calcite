@@ -520,6 +520,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
     ensureRootConverters();
     registerMaterializations();
 
+    // 这个drive就是基于信息结构改写?
     ruleDriver.drive();
 
     if (LOGGER.isTraceEnabled()) {
@@ -1079,6 +1080,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
   }
 
   /**
+   * fire所有被匹配到的relnode
    * Fires all rules matched by a relational expression.
    *
    * @param rel      Relational expression which has just been created (or maybe

@@ -255,6 +255,7 @@ public class Programs {
 
   /** Returns the standard program with user metadata provider. */
   public static Program standard(RelMetadataProvider metadataProvider) {
+    // 这个program被作为返回值的倒数第二个
     final Program program1 =
         (planner, rel, requiredOutputTraits, materializations, lattices) -> {
           for (RelOptMaterialization materialization : materializations) {
@@ -328,6 +329,7 @@ public class Programs {
       this.programs = programs;
     }
 
+    // 这里是一个chain的起点
     @Override public RelNode run(RelOptPlanner planner, RelNode rel,
         RelTraitSet requiredOutputTraits,
         List<RelOptMaterialization> materializations,

@@ -74,6 +74,20 @@ class MaterializedViewRelOptRulesTest {
         .ok();
   }
 
+  // org.apache.calcite.rel.rules.materialize.MaterializedViewRule.perform中实现基于结构信息改写
+  @Test void testAggregateMaterializationNoAggregateFuncs10() {
+    String q = "select \"emps\".\"empid\"" +
+        "from \"emps\"" +
+        "join \"dependents\" using (\"empid\")" +
+        "where \"emps\".\"empid\" = 1";
+    String m = "select \"emps\".\"empid\", \"emps\".\"deptno\"" +
+        "from \"emps\"" +
+        "join \"depts\" using (\"deptno\")" +
+        "join \"dependents\" using (\"empid\")" +
+        "where \"emps\".\"empid\" = 1";
+    sql(m, q).ok();
+  }
+
   /** Aggregation materialization with a project. */
   @Test void testAggregateProject() {
     // Note that materialization does not start with the GROUP BY columns.
@@ -813,8 +827,8 @@ class MaterializedViewRelOptRulesTest {
   @Test void testJoinMaterialization3() {
     String q = "select \"empid\" \"deptno\" from \"emps\"\n"
         + "join \"depts\" using (\"deptno\") where \"empid\" = 1";
-    String m = "select \"empid\" \"deptno\" from \"emps\"\n"
-        + "join \"depts\" using (\"deptno\")";
+    String m = "select \"empid\" \"deptno\" from \"depts\"\n"
+        + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();
   }
 

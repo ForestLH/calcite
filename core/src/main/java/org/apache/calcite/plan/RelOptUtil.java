@@ -2019,6 +2019,7 @@ public abstract class RelOptUtil {
     RelOptRules.CALC_RULES.forEach(planner::addRule);
   }
 
+  // 给planner中注册默认的rules
   @Experimental
   public static void registerDefaultRules(RelOptPlanner planner,
       boolean enableMaterializations, boolean enableBindable) {
