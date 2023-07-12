@@ -1,0 +1,33 @@
+allprojects{
+    repositories {
+        def ALIYUN_REPOSITORY = 'https://maven.aliyun.com/repository/public/'
+        def ALIYUN_JCENTER= 'https://maven.aliyun.com/repository/jcenter/'
+        def ALIYUN_GOOGLE = 'https://maven.aliyun.com/repository/google/'
+        def ALIYUN_GRADLE_PLUGIN = 'https://maven.aliyun.com/repository/gradle-plugin/'
+        all { ArtifactRepository repo ->
+            if(repo instanceof MavenArtifactRepository){
+                def url = repo.url.toString()
+                if (url.startsWith('https://repo1.maven.org/maven2/')) {
+                    project.logger.lifecycle "Repository ${repo.url} replaced by $ALIYUN_REPOSITORY."
+                    remove repo
+                }
+                if (url.startsWith('https://jcenter.bintray.com/')) {
+                    project.logger.lifecycle "Repository ${repo.url} replaced by $ALIYUN_JCENTER."
+                    remove repo
+                }
+                if (url.startsWith('https://dl.google.com/dl/android/maven2/')) {
+                    project.logger.lifecycle "Repository ${repo.url} replaced by $ALIYUN_GOOGLE."
+                    remove repo
+                }
+                if (url.startsWith('https://plugins.gradle.org/m2/')) {
+                    project.logger.lifecycle "Repository ${repo.url} replaced by $ALIYUN_GRADLE_PLUGIN."
+                    remove repo
+                }
+            }
+        }
+        maven { url ALIYUN_REPOSITORY }
+        maven { url ALIYUN_JCENTER }
+        maven { url ALIYUN_GOOGLE }
+        maven { url ALIYUN_GRADLE_PLUGIN}
+    }
+}

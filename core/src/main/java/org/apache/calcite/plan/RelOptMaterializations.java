@@ -89,6 +89,7 @@ public abstract class RelOptMaterializations {
       int count = applied.size();
       for (int i = 0; i < count; i++) {
         Pair<RelNode, List<RelOptMaterialization>> current = applied.get(i);
+        // 这里传入当前的根relNode，目标物化视图m,所有的unifyRule规则
         List<RelNode> sub = substitute(current.left, m, materializationRules);
         if (!sub.isEmpty()) {
           ImmutableList.Builder<RelOptMaterialization> builder =
@@ -189,6 +190,7 @@ public abstract class RelOptMaterializations {
     return applicableMaterializations;
   }
 
+  // 后面单独讲，这里是尝试匹配星型反射（不包括带agg的星型反射），星型匹配是单独实现的
   private static List<RelNode> substitute(
       RelNode root, RelOptMaterialization materialization,
       List<SubstitutionVisitor.UnifyRule> materializationRules) {
@@ -202,6 +204,7 @@ public abstract class RelOptMaterializations {
       }
     }
 
+    // 先归一化query和target的关系代数，便于进行规则匹配
     // Push filters to the bottom, and combine projects on top.
     RelNode target = materialization.queryRel;
     // try to trim unused field in relational expressions.

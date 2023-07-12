@@ -42,7 +42,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -80,6 +82,9 @@ public class MaterializedViewSubstitutionVisitorTest {
       new MaterializedViewTester() {
         @Override protected List<RelNode> optimize(RelNode queryRel,
             List<RelOptMaterialization> materializationList) {
+          // 这样只用SubstitutionVisitor去做的话，相当于只是使用了UnifyRule去匹配，
+          // 但是可以看另外一个MaterializedViewRelOptRulesTest,这个就不仅仅是这样遍历的
+          // 
           RelOptMaterialization materialization = materializationList.get(0);
           SubstitutionVisitor substitutionVisitor =
               new SubstitutionVisitor(canonicalize(materialization.queryRel),
@@ -91,6 +96,7 @@ public class MaterializedViewSubstitutionVisitorTest {
         private RelNode canonicalize(RelNode rel) {
           final HepPlanner hepPlanner = new HepPlanner(HEP_PROGRAM);
           hepPlanner.setRoot(rel);
+//          RelOptUtil.registerDefaultRules(hepPlanner, true,false);
           return hepPlanner.findBestExp();
         }
       };

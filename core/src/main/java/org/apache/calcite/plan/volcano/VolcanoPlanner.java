@@ -313,11 +313,14 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
     assert originalRoot != null : "originalRoot";
 
     // Register rels using materialized views.
+    // materializations这个有可能可以用的物化表已经在之前就放入到这里了，主要就是用一个shuttle去遍历拿到tableScan算子，
+    // 如果某个query里涉及到的所有表都被rp的tableScan所包含，那么就加入到这个materializations变量中保存
     final List<Pair<RelNode, List<RelOptMaterialization>>> materializationUses =
         RelOptMaterializations.useMaterializedViews(originalRoot, materializations);
     for (Pair<RelNode, List<RelOptMaterialization>> use : materializationUses) {
       RelNode rel = use.left;
       Hook.SUB.run(rel);
+      // 注册带物化视图的改写的relnode，里面会进行集成到优化器本身的addRule后的规则筛选（onmatch）
       registerImpl(rel, root.set);
     }
 

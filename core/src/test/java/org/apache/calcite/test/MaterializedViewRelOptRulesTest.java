@@ -46,7 +46,7 @@ class MaterializedViewRelOptRulesTest {
           RelOptPlanner planner = queryRel.getCluster().getPlanner();
           RelTraitSet traitSet = queryRel.getCluster().traitSet()
               .replace(EnumerableConvention.INSTANCE);
-          RelOptUtil.registerDefaultRules(planner, true, false);
+//          RelOptUtil.registerDefaultRules(planner, true, false);
           return ImmutableList.of(
               Programs.standard().run(planner, queryRel, traitSet,
                   materializationList, ImmutableList.of()));
@@ -827,6 +827,14 @@ class MaterializedViewRelOptRulesTest {
   @Test void testJoinMaterialization3() {
     String q = "select \"empid\" \"deptno\" from \"emps\"\n"
         + "join \"depts\" using (\"deptno\") where \"empid\" = 1";
+    String m = "select \"empid\" \"deptno\" from \"depts\"\n"
+        + "join \"emps\" using (\"deptno\")";
+    sql(m, q).ok();
+  }
+
+  @Test void testSwapInnerJoin() {
+    String q = "select \"empid\" \"deptno\" from \"emps\"\n"
+        + "join \"depts\" using (\"deptno\")";
     String m = "select \"empid\" \"deptno\" from \"depts\"\n"
         + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();

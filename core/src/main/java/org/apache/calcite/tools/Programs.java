@@ -163,6 +163,7 @@ public class Programs {
 
       List<RelMetadataProvider> list = Lists.newArrayList(metadataProvider);
       hepPlanner.registerMetadataProviders(list);
+      // 将所有的物化表放进来
       for (RelOptMaterialization materialization : materializations) {
         hepPlanner.addMaterialization(materialization);
       }

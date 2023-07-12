@@ -220,6 +220,7 @@ public class VolcanoRuleCall extends RelOptRuleCall {
 
       volcanoPlanner.ruleCallStack.push(this);
       try {
+        // 得知道这个rule是从何而来
         getRule().onMatch(this);
       } finally {
         volcanoPlanner.ruleCallStack.pop();

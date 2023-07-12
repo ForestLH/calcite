@@ -89,7 +89,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <C> Configuration type
  */
-// 基于结构信息改写
+// 基于结构信息改写的Rule
 public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config>
     extends RelRule<C> {
 

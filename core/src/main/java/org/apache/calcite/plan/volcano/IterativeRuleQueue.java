@@ -102,6 +102,10 @@ class IterativeRuleQueue extends RuleQueue {
    * obsolete set or has been pruned.
    *
    */
+  /*从匹配列表的头部删除规则匹配，并返回它。如果没有匹配，返回null。
+  * 注意，如果其中一个操作数属于过时的集合或已被修剪
+  * 那么VolcanoPlanner仍然可能决定拒绝已经无效的规则匹配。
+  * */
   public @Nullable VolcanoRuleMatch popMatch() {
     dumpPlannerState();
 

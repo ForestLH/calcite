@@ -74,6 +74,7 @@ public abstract class MaterializedViewTester {
             s -> MaterializedViewFixture.resultContains(s,
                 "EnumerableTableScan(table=[["
                     + testConfig.defaultSchema + ", MV0]]"));
+    // testConfig.materializationList 这个是所有的物化表
     final List<RelNode> substitutes =
         optimize(testConfig.queryRel, testConfig.materializationList);
     if (substitutes.stream()
