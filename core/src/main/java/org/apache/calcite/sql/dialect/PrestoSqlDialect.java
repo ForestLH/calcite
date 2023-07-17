@@ -110,6 +110,28 @@ public class PrestoSqlDialect extends SqlDialect {
     return true;
   }
 
+  @Override public void quoteStringLiteralUnicode(StringBuilder buf, String val) {
+    super.quoteStringLiteralUnicode(buf, val);
+//    buf.append(val);
+//    buf.append("u&'");
+//    for (int i = 0; i < val.length(); i++) {
+//      char c = val.charAt(i);
+//      if (c < 32 || c >= 128) {
+//        buf.append('\\');
+//        buf.append(HEXITS[(c >> 12) & 0xf]);
+//        buf.append(HEXITS[(c >> 8) & 0xf]);
+//        buf.append(HEXITS[(c >> 4) & 0xf]);
+//        buf.append(HEXITS[c & 0xf]);
+//      } else if (c == '\'' || c == '\\') {
+//        buf.append(c);
+//        buf.append(c);
+//      } else {
+//        buf.append(c);
+//      }
+//    }
+//    buf.append("'");
+  }
+
   @Override public CalendarPolicy getCalendarPolicy() {
     return CalendarPolicy.SHIFT;
   }

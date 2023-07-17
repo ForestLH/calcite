@@ -16,7 +16,9 @@
  */
 package org.apache.calcite.sql;
 
+import org.apache.calcite.jdbc.CalcitePrepare;
 import org.apache.calcite.sql.dialect.AnsiSqlDialect;
+import org.apache.calcite.sql.dialect.PrestoSqlDialect;
 import org.apache.calcite.sql.parser.SqlParserPos;
 import org.apache.calcite.sql.pretty.SqlPrettyWriter;
 import org.apache.calcite.sql.util.SqlString;
@@ -128,7 +130,7 @@ public abstract class SqlNode implements Cloneable {
   }
 
   @Override public String toString() {
-    return toSqlString(c -> c.withDialect(AnsiSqlDialect.DEFAULT)
+    return toSqlString(c -> c.withDialect(PrestoSqlDialect.DEFAULT)
         .withAlwaysUseParentheses(false)
         .withSelectListItemsOnSeparateLines(false)
         .withUpdateSetListNewline(false)

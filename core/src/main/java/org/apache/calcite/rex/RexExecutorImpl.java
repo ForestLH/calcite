@@ -77,6 +77,7 @@ public class RexExecutorImpl implements RexExecutor {
           node, "c" + programBuilder.getProjectList().size());
     }
     final RelDataTypeFactory typeFactory = rexBuilder.getTypeFactory();
+    // TODO(testCastVarbinary) 这里会去
     final JavaTypeFactory javaTypeFactory = typeFactory instanceof JavaTypeFactory
         ? (JavaTypeFactory) typeFactory
         : new JavaTypeFactoryImpl(typeFactory.getTypeSystem());

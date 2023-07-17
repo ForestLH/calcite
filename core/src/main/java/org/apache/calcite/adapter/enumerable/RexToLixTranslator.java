@@ -108,6 +108,9 @@ public class RexToLixTranslator implements RexVisitor<RexToLixTranslator.Result>
           .put(BuiltInMethod.TRANSLATE3.method, TRANSLATE3)
           .build();
 
+  // 这个一定得是Java的类型，所以在testCastVarbinary这个单测 String query = "select cast('abc' as varbinary)";
+  // 就报错，因为 在做RexSimplify这个rule优化的时候，就会使用这个shuttle来进行遍历rexNode，
+  // 做校验的时候varbinary就会变成Java里面的类型ByteString.class; 但是'abc'却是String，所以就会报错
   final JavaTypeFactory typeFactory;
   final RexBuilder builder;
   private final @Nullable RexProgram program;

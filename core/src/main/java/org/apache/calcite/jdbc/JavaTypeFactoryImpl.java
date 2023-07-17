@@ -214,7 +214,7 @@ public class JavaTypeFactoryImpl
         return type.isNullable() ? Float.class : float.class;
       case BINARY:
       case VARBINARY:
-        return ByteString.class;
+        return String.class;
       case GEOMETRY:
         return Geometry.class;
       case SYMBOL:

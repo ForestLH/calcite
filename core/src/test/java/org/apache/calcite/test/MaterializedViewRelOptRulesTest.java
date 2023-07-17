@@ -839,6 +839,11 @@ class MaterializedViewRelOptRulesTest {
         + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();
   }
+  @Test void testCastVarbinary() {
+    String q = "select cast('abc' as varbinary)";
+    String m = "select cast('abc' as varbinary)";
+    sql(m, q).ok();
+  }
 
   @Test void testJoinMaterialization4() {
     sql("select \"empid\" \"deptno\" from \"emps\"\n"

@@ -29,6 +29,7 @@ import org.apache.calcite.sql.SqlSetOption;
 import org.apache.calcite.sql.SqlUnknownLiteral;
 import org.apache.calcite.sql.SqlWriterConfig;
 import org.apache.calcite.sql.dialect.AnsiSqlDialect;
+import org.apache.calcite.sql.dialect.PrestoSqlDialect;
 import org.apache.calcite.sql.dialect.SparkSqlDialect;
 import org.apache.calcite.sql.parser.SqlParser.Config;
 import org.apache.calcite.sql.pretty.SqlPrettyWriter;
@@ -40,11 +41,7 @@ import org.apache.calcite.sql.validate.SqlConformanceEnum;
 import org.apache.calcite.test.DiffTestCase;
 import org.apache.calcite.test.IntervalTest;
 import org.apache.calcite.tools.Hoist;
-import org.apache.calcite.util.Bug;
-import org.apache.calcite.util.ConversionUtil;
-import org.apache.calcite.util.Pair;
-import org.apache.calcite.util.TestUtil;
-import org.apache.calcite.util.Util;
+import org.apache.calcite.util.*;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
@@ -734,6 +731,18 @@ public class SqlParserTest {
     sql("select * as x from emp")
         .ok("SELECT * AS `X`\n"
             + "FROM `EMP`");
+  }
+  // 测试unicode编码
+  @Test void testUnicode() {
+    SqlNode node = sql("select '江苏省'").withDialect(PrestoSqlDialect.DEFAULT).node();
+    SqlSelect select = (SqlSelect) node;
+    SqlNodeList selectList = select.getSelectList();
+    SqlLiteral literal = (SqlLiteral) selectList.get(0);
+    Object value = literal.getValue();
+    NlsString nlsString = (NlsString) value;
+    nlsString.getCharset();
+    nlsString.toString();
+    System.out.println("江苏省");
   }
 
   @Test void testFromStarFails() {

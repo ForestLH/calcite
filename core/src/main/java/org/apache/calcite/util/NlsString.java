@@ -29,6 +29,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import org.apache.calcite.sql.dialect.PrestoSqlDialect;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
@@ -230,7 +232,7 @@ public class NlsString implements Comparable<NlsString>, Cloneable {
   /** As {@link #asSql(boolean, boolean, SqlDialect)} but with SQL standard
    * dialect. */
   public String asSql(boolean prefix, boolean suffix) {
-    return asSql(prefix, suffix, AnsiSqlDialect.DEFAULT);
+    return asSql(prefix, suffix, PrestoSqlDialect.DEFAULT);
   }
 
   /**

@@ -17,6 +17,8 @@
 package org.apache.calcite.rel.rel2sql;
 
 import org.apache.calcite.sql.dialect.CalciteSqlDialect;
+import org.apache.calcite.sql.dialect.ParaccelSqlDialect;
+import org.apache.calcite.sql.dialect.PrestoSqlDialect;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.test.CalciteAssert;
 
@@ -48,7 +50,19 @@ class RelToSqlConverterStructsTest {
         + "FROM \"myDb\".\"myTable\"";
     sql(query).ok(expected);
   }
+  @Test void testUnicode() {
+    String query = "select '江苏省'";
+    RelToSqlConverterTest.Sql sql = sql(query);
+    String res = sql.exec();
+    System.out.println(res);
+  }
 
+  @Test void testCastVarbinary() {
+    String query = "select cast('abc' as varbinary)";
+    RelToSqlConverterTest.Sql sql = sql(query);
+    String res = sql.exec();
+    System.out.println(res);
+  }
   @Test void testNestedSchemaRootColumns() {
     String query = "SELECT \"a\", \"e\" FROM \"myTable\"";
     String expected = "SELECT \"a\", "
