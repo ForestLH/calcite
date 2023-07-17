@@ -47,6 +47,7 @@ public class MaterializedViewOnlyJoinRule
 
   @Override public void onMatch(RelOptRuleCall call) {
     final Join join = call.rel(0);
+    System.out.println("haozai: MaterializedViewOnlyJoinRule onMatch");
     perform(call, null, join);
   }
 

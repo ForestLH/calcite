@@ -523,7 +523,8 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
     ensureRootConverters();
     registerMaterializations();
 
-    // 这个drive就是基于信息结构改写?
+    //NOTE 这个drive就是基于信息结构改写 在 org.apache.calcite.prepare.CalcitePrepareImpl.createPlanner(org.apache.calcite.jdbc.CalcitePrepare.Context, org.apache.calcite.plan.Context, org.apache.calcite.plan.RelOptCostFactory)创建
+
     ruleDriver.drive();
 
     if (LOGGER.isTraceEnabled()) {

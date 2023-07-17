@@ -41,6 +41,8 @@ import java.util.List;
 class MaterializedViewRelOptRulesTest {
   static final MaterializedViewTester TESTER =
       new MaterializedViewTester() {
+    // 在SubstitutionVisitorTest中，就是直接使用下面的语句，给new了一个visitor，然后直接调用visitor的go方法，就可以去匹配
+    // SubstitutionVisitor substitutionVisitor
         @Override protected List<RelNode> optimize(RelNode queryRel,
             List<RelOptMaterialization> materializationList) {
           RelOptPlanner planner = queryRel.getCluster().getPlanner();
@@ -826,7 +828,7 @@ class MaterializedViewRelOptRulesTest {
 
   @Test void testJoinMaterialization3() {
     String q = "select \"empid\" \"deptno\" from \"emps\"\n"
-        + "join \"depts\" using (\"deptno\") where \"empid\" = 1";
+        + "join \"depts\" using (\"deptno\")";
     String m = "select \"empid\" \"deptno\" from \"depts\"\n"
         + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();

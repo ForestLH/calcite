@@ -435,6 +435,7 @@ public class CalcitePrepareImpl implements CalcitePrepare {
 
   /** Creates a query planner and initializes it with a default set of
    * rules. */
+  // NOTE 创建VolcanoPlanner，里面还包含了default的一些OptRule
   protected RelOptPlanner createPlanner(
       final CalcitePrepare.Context prepareContext,
       org.apache.calcite.plan.@Nullable Context externalContext,
@@ -952,7 +953,7 @@ public class CalcitePrepareImpl implements CalcitePrepare {
             prepareContext.config());
     final RexBuilder rexBuilder = new RexBuilder(typeFactory);
     final RelOptPlanner planner =
-        createPlanner(prepareContext,
+        createPlanner(prepareContext,  // NOTE 创建VolcanoPlanner，并且里面还有默认的RelOptRule了
             config.getContext(),
             config.getCostFactory());
     final RelOptCluster cluster = createCluster(planner, rexBuilder);

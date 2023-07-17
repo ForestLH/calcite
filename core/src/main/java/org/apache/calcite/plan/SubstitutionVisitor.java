@@ -36,6 +36,8 @@ import org.apache.calcite.rel.mutable.MutableRels;
 import org.apache.calcite.rel.mutable.MutableScan;
 import org.apache.calcite.rel.mutable.MutableSetOp;
 import org.apache.calcite.rel.mutable.MutableUnion;
+import org.apache.calcite.rel.rules.materialize.MaterializedViewOnlyJoinRule;
+import org.apache.calcite.rel.rules.materialize.MaterializedViewRules;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.rel.type.RelDataTypeField;
 import org.apache.calcite.rex.RexBuilder;
@@ -128,6 +130,8 @@ import static java.util.Objects.requireNonNull;
 public class SubstitutionVisitor {
   private static final boolean DEBUG = CalciteSystemProperty.DEBUG.value();
 
+  // NOTE 这个是SubstitutionVisitor在执行go方法时候会使用的默认的rules
+  // 注意，这里指定了rule的类型是UnifyRule，所以无法使用MaterializedViewRule，这样基于结构信息改写的rule
   public static final ImmutableList<UnifyRule> DEFAULT_RULES =
       ImmutableList.of(
           TrivialRule.INSTANCE,
@@ -141,7 +145,8 @@ public class SubstitutionVisitor {
           UnionToUnionUnifyRule.INSTANCE,
           UnionOnCalcsToUnionUnifyRule.INSTANCE,
           IntersectToIntersectUnifyRule.INSTANCE,
-          IntersectOnCalcsToIntersectUnifyRule.INSTANCE);
+          IntersectOnCalcsToIntersectUnifyRule.INSTANCE
+      );
 
   /**
    * Factory for a builder for relational expressions.

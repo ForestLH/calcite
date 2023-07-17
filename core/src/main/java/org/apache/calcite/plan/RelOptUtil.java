@@ -2019,17 +2019,20 @@ public abstract class RelOptUtil {
     RelOptRules.CALC_RULES.forEach(planner::addRule);
   }
 
-  // 给planner中注册默认的rules
+  //NOTE 给planner中注册默认的rules
   @Experimental
   public static void registerDefaultRules(RelOptPlanner planner,
       boolean enableMaterializations, boolean enableBindable) {
     if (CalciteSystemProperty.ENABLE_COLLATION_TRAIT.value()) {
       registerAbstractRelationalRules(planner);
     }
+    // 这些rules不知道是啥
     registerAbstractRules(planner);
+    // 这是些RBO的rule
     registerBaseRules(planner);
 
     if (enableMaterializations) {
+      // NOTE 这里是注册结构信息改写的rule
       registerMaterializationRules(planner);
     }
     if (enableBindable) {

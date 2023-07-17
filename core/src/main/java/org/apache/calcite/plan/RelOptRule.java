@@ -42,6 +42,7 @@ import java.util.function.Predicate;
  * <p>The optimizer figures out which rules are applicable, then calls
  * {@link #onMatch} on each of them.
  */
+//NOTE 这个RelOptRule里面包含普通的UnifyRule，也包含MaterializedViewRule这个rule，基于结构信息改写的rule
 public abstract class RelOptRule {
   //~ Static fields/initializers ---------------------------------------------
 

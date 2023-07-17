@@ -84,7 +84,7 @@ public class MaterializedViewSubstitutionVisitorTest {
             List<RelOptMaterialization> materializationList) {
           // 这样只用SubstitutionVisitor去做的话，相当于只是使用了UnifyRule去匹配，
           // 但是可以看另外一个MaterializedViewRelOptRulesTest,这个就不仅仅是这样遍历的
-          // 
+          //
           RelOptMaterialization materialization = materializationList.get(0);
           SubstitutionVisitor substitutionVisitor =
               new SubstitutionVisitor(canonicalize(materialization.queryRel),
@@ -93,6 +93,7 @@ public class MaterializedViewSubstitutionVisitorTest {
               .go(materialization.tableRel);
         }
 
+        //NOTE 归一化，对于查询和物化都使用相同的RBO来进行优化，尽量达到SPJA
         private RelNode canonicalize(RelNode rel) {
           final HepPlanner hepPlanner = new HepPlanner(HEP_PROGRAM);
           hepPlanner.setRoot(rel);
@@ -856,7 +857,7 @@ public class MaterializedViewSubstitutionVisitorTest {
 
   @Test void testJoinMaterialization3() {
     String q = "select \"empid\" \"deptno\" from \"emps\"\n"
-        + "join \"depts\" using (\"deptno\") where \"empid\" = 1";
+        + "join \"depts\" using (\"deptno\")";
     String m = "select \"empid\" \"deptno\" from \"depts\"\n"
         + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();
