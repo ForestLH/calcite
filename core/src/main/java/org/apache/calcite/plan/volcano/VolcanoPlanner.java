@@ -269,6 +269,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
     return mapRel2Subset.get(rel) != null;
   }
 
+  // 这里的setRoot，就不是和HepPlanner的setRoot一样（HepPlanner的setRoot是生成DAG图，用于使用RBO优化规则）
   @Override public void setRoot(RelNode rel) {
     this.root = registerImpl(rel, null);
     if (this.originalRoot == null) {
@@ -413,6 +414,8 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
     this.provenanceMap.clear();
   }
 
+  // NOTE: 添加规则进来，记住这种RelOptRule是不包含UnifyRule的
+  // 存放的位置就在classOperands中，这是一个map，在fireRules函数里面根据传进来的RelNode来进行匹配可能能用上的RelOptRule
   @Override public boolean addRule(RelOptRule rule) {
     if (locked) {
       return false;
@@ -615,6 +618,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
       }
       result = canonize(subset);
     } else {
+      // NOTE 最后会调用registerImpl来注册一些
       result = register(rel, equivRel);
     }
 
@@ -1084,7 +1088,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
   }
 
   /**
-   * fire所有被匹配到的relnode
+   * fire所有被匹配到的relnode， 这个classOperands是一个map在此类的addRule中添加进来的
    * Fires all rules matched by a relational expression.
    *
    * @param rel      Relational expression which has just been created (or maybe

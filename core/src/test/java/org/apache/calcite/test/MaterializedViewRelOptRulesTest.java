@@ -841,6 +841,48 @@ class MaterializedViewRelOptRulesTest {
         + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();
   }
+  void primesWithif(int cap, int t, int composite) {
+    int i,j;
+    i = t / cap;
+    j = t % cap;
+    if(i <= 1)
+      primesWithif(cap,t+1,composite);
+    else if(j == 0)
+      primesWithif(cap,t+1,j);
+    else if(j == i && composite == 0) {
+      System.out.printf("%d ",i);
+      primesWithif(cap,t+1, composite);
+    }
+    else if(j > 1 && j < i)
+      primesWithif(cap,t+1, composite + ((i % j) == 0 ? 1 : 0));
+    else if(t < cap * cap)
+      primesWithif(cap,t+1,composite);
+  }
+  void primesWithoutIf(int cap, int t, int composite) {
+//    int i,j;
+//    i = t / cap;
+//    j = t % cap;
+//    (i <= 1) ? primesWithoutIf(cap,t+1,composite);
+//    else if(j == 0)
+//      primesWithoutIf(cap,t+1,j);
+//    else if(j == i && composite == 0) {
+//      System.out.printf("%d ",i);
+//      primesWithoutIf(cap,t+1, composite);
+//    }
+//    else if(j > 1 && j < i)
+//      primesWithoutIf(cap,t+1, composite + ((i % j) == 0 ? 1 : 0));
+//    else if(t < cap * cap)
+//      primesWithoutIf(cap,t+1,composite);
+  }
+
+  @Test void primesWithIllogicalNaming() {
+
+  }
+
+  @Test void testPrimes() {
+    primesWithif(100, 0, 0);
+  }
+
   @Test void testCastVarbinary() {
     String q = "select cast('abc' as varbinary)";
     String m = "select cast('abc' as varbinary)";

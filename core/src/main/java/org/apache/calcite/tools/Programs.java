@@ -280,7 +280,7 @@ public class Programs {
           return rootRel3;
         };
 
-    return sequence(subQuery(metadataProvider),
+    return sequence(subQuery(metadataProvider),  // NOTE 外面这个sequence就是指使用一个链式的program来包围这些program
         new DecorrelateProgram(),
         new TrimFieldsProgram(),
         program1,
