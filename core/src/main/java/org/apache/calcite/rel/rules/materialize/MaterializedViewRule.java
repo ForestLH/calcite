@@ -90,6 +90,11 @@ import static java.util.Objects.requireNonNull;
  * @param <C> Configuration type
  */
 // 基于结构信息改写的Rule
+// perform这个方法是进行改写的关键，可以看到每个具体的MaterializedViewRule里面的onMatch方法实际上都是调用的这个方法
+// 只支持inner join，只支持SPJA结构，join顺序无关
+// 这个基于结构信息改写的会有两大类
+// 主要是 MaterializedViewAggregateRule
+// 以及MaterializedViewJoinRule
 public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config>
     extends RelRule<C> {
 
@@ -142,6 +147,8 @@ public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config
    * <p>The rule contains multiple extensions compared to the original paper. One of
    * them is the possibility of creating rewritings using Union operators, e.g., if
    * the result of a query is partially contained in the materialized view.
+   * NOTE 这个就是对于那篇论文的具体实现
+   * TODO 为什么这个顶层一定是一个Project呢
    */
   protected void perform(RelOptRuleCall call, @Nullable Project topProject, RelNode node) {
     final RexBuilder rexBuilder = node.getCluster().getRexBuilder();
@@ -168,6 +175,7 @@ public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config
       // 2. Initialize all query related auxiliary data structures
       // that will be used throughout query rewriting process
       // Generate query table references
+      // 解析查询关系代数使用的表
       final Set<RelTableRef> queryTableRefs = mq.getTableReferences(node);
       if (queryTableRefs == null) {
         // Bail out
@@ -175,18 +183,25 @@ public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config
       }
 
       // Extract query predicates
+      // 解析查询关系代数谓词列表
       final RelOptPredicateList queryPredicateList =
           mq.getAllPredicates(node);
       if (queryPredicateList == null) {
         // Bail out
         return;
       }
+
+      // 将谓词列表进行切分
+      // 切分成等值连接和其他类型（比如>， like等）的断言Pair<RexNode, RexNode> queryPreds，
+      //key是等值断言表达式，value是其他类型的断言表达式，因为查询里有等值连接
       final RexNode pred =
           simplify.simplifyUnknownAsFalse(
               RexUtil.composeConjunction(rexBuilder,
                   queryPredicateList.pulledUpPredicates));
       final Pair<RexNode, RexNode> queryPreds = splitPredicates(rexBuilder, pred);
 
+      // 提取查询等价类. 等价类是查询输出中已知相等的一组列
+      // 构建查询的等值等价类
       // Extract query equivalence classes. An equivalence class is a set
       // of columns in the query output that are known to be equal.
       final EquivalenceClasses qEC = new EquivalenceClasses();
@@ -197,7 +212,8 @@ public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config
             (RexTableInputRef) equiCond.getOperands().get(0),
             (RexTableInputRef) equiCond.getOperands().get(1));
       }
-
+      // 3. 迭代所有可用的物化，尝试对query进行重写
+      //  物化关系代数顶层 project 分离
       // 3. We iterate through all applicable materializations trying to
       // rewrite the given query
       for (RelOptMaterialization materialization : materializations) {
@@ -233,13 +249,14 @@ public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config
           // Skip it
           continue;
         }
-
+        // 3.1 在继续之前对view进行检查
         // 3.1. View checks before proceeding
         if (!isValidPlan(topViewProject, viewNode, mq)) {
           // Skip it
           continue;
         }
-
+        // 3.2 初始化所有查询相关的辅助的数据结构，将用作整个重写的过程
+        // 抽取view的谓词
         // 3.2. Initialize all query related auxiliary data structures
         // that will be used throughout query rewriting process
         // Extract view predicates
@@ -1294,6 +1311,7 @@ public abstract class MaterializedViewRule<C extends MaterializedViewRule.Config
 
   /**
    * Class representing an equivalence class, i.e., a set of equivalent columns
+   * NOTE 等价类
    */
   protected static class EquivalenceClasses {
 

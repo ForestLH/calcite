@@ -270,6 +270,7 @@ public class VolcanoPlanner extends AbstractRelOptPlanner {
   }
 
   // 这里的setRoot，就不是和HepPlanner的setRoot一样（HepPlanner的setRoot是生成DAG图，用于使用RBO优化规则）
+  // 这里的setRoot作用是递归调用registerImpl，筛选出可用的MaterializedViewRule,然后加入到queue中
   @Override public void setRoot(RelNode rel) {
     this.root = registerImpl(rel, null);
     if (this.originalRoot == null) {

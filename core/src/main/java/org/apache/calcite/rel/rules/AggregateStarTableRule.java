@@ -56,6 +56,7 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * NOTE 星型聚合匹配
  * Planner rule that matches an {@link org.apache.calcite.rel.core.Aggregate} on
  * top of a {@link org.apache.calcite.schema.impl.StarTable.StarTableScan}.
  *

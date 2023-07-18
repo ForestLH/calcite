@@ -841,6 +841,10 @@ class MaterializedViewRelOptRulesTest {
         + "join \"emps\" using (\"deptno\")";
     sql(m, q).ok();
   }
+  // 来自junhe的文档
+  @Test void testAloudataDocument() {
+
+  }
   void primesWithif(int cap, int t, int composite) {
     int i,j;
     i = t / cap;

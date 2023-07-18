@@ -57,6 +57,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Utilities for creating {@link Program}s.
+ * NOTE Programs 这个类就是用于产生Program的一个Util类
+ * 比如可以通过of函数来自定义一些装有rule的Program
  */
 public class Programs {
   @Deprecated // to be removed before 2.0

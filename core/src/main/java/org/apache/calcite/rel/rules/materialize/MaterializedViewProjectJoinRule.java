@@ -25,6 +25,7 @@ import org.apache.calcite.tools.RelBuilderFactory;
 
 import org.immutables.value.Value;
 
+// TODO 这里为什么他可以匹配上到这个rule，我要是想实现一个自己的rule，发生在Join->Filter，这种该如何做
 /** Rule that matches Project on Join. */
 @Value.Enclosing
 public class MaterializedViewProjectJoinRule

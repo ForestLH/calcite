@@ -197,6 +197,7 @@ public abstract class RelOptMaterializations {
     // First, if the materialization is in terms of a star table, rewrite
     // the query in terms of the star table.
     if (materialization.starRelOptTable != null) {
+      // NOTE 对明细星型做匹配
       RelNode newRoot =
           RelOptMaterialization.tryUseStar(root, materialization.starRelOptTable);
       if (newRoot != null) {
