@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 source 'https://rubygems.org'
-gem 'jekyll', '~>4'
+gem 'jekyll', '~> 4', '>= 4.3.0'
 gem "webrick", "~> 1.7"
 gem "nokogiri", "~> 1.14"
 
